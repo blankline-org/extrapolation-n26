@@ -104,8 +104,7 @@ evaluations described in §7.2 of the write-up. What is published here is its co
 attempts with the model's own analysis, verified score, failure reason and timestamp — plus everything
 downstream, since both post-processing stages contain no model.
 
-**You can audit what the loop did and check every claim downstream of it. You cannot re-run the loop.** The
-check that requires no trust in us is the restart ablation below.
+**You can audit what the loop did and check every claim downstream of it. You cannot re-run the loop.**
 
 ## Layout
 
@@ -122,23 +121,11 @@ check that requires no trust in us is the restart ablation below.
 | `results/archive-circle-packing-26.heavy.json` | 91 attempts, with analysis, scores and timestamps |
 | `results/report-convention.md`, `report-independent.md` | memory on/off controls, including the null result |
 
-## Not yet run
-
-Listed here rather than only in the paper, because these would strengthen or break the central claim:
-
-- **Matched-budget memory-free restarts.** `pack26-discovery/structural-search.mjs --seed=N --seconds=S`
-  contains no model. If restarts recover degree sequence `22222333334444444444555556` at any meaningful rate,
-  the basin-escape argument fails.
-- **Comparison against FICO Xpress, ThetaEvolve, and the July 2025 independent result.** We could not obtain
-  published coordinates for any of the three.
-
-If you run either, we would like to see the result.
-
 ## License
 
 MIT — see [`LICENSE`](LICENSE). Coordinates and archived run data are facts about a public mathematical
 problem, released under the same terms.
 
 Built by Blankline, the team behind [Dropstone](https://dropstone.io). The model is Dropstone Heavy 1.7
-(Kimi 3), served from our own commercial endpoint, used frozen at list price with no fine-tuning. We did not
-train the model; we built the memory loop around it.
+(Kimi 3), served from our own endpoint and used frozen. We did not train it — we built the memory loop
+around it.

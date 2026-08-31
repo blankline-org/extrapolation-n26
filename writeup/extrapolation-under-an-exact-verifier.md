@@ -586,6 +586,6 @@ it is why the experiment was built this way, not as evidence that it worked. The
 
 ---
 
-*We are Blankline, the team behind [Dropstone](https://dropstone.io). The model is Dropstone Heavy 1.7 (Kimi 3), served from our
-own commercial endpoint, used frozen at list price with no fine-tuning. We did not train the model; we built
-the memory loop around it.*
+*We are Blankline, the team behind [Dropstone](https://dropstone.io). The model is Dropstone Heavy 1.7
+(Kimi 3), served from our own endpoint and used frozen. We did not train it — we built the memory loop
+around it.*
