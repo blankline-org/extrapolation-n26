@@ -162,10 +162,11 @@ that settles it.*
 ![Paired bars showing how many circles have 2, 3, 4, 5, 6 and 7 contacts in each packing, with the sorted
 degree sequences printed underneath.](figures/fig-2-degrees.png)
 
-*Figure 2 — the degree distributions. Ours peaks at ten degree-4 circles with a single degree-6 and nothing
-above it; the record family is right-shifted, with six degree-6 circles and one degree-7. Because a degree
-sequence does not depend on how the circles are numbered, two graphs with different degree sequences cannot be
-relabelings of each other. This is the step figure 1 can only illustrate.*
+*Figure 2 — the degree distributions. Both share a mode of ten degree-4 circles; the difference is entirely in
+the tails. Ours carries the weight low — five degree-2 and five degree-3 circles, a single degree-6, nothing
+above it. The record family carries it high — two degree-2, three degree-3, six degree-6 and one degree-7.
+Because a degree sequence does not depend on how the circles are numbered, two graphs with different degree
+sequences cannot be relabelings of each other. This is the step figure 1 can only illustrate.*
 
 **Structural difference alone is not the claim.** Circle packing at this scale is multimodal; independent
 restarts land in different basins, and finding *a* different contact graph is inexpensive. We report this to
