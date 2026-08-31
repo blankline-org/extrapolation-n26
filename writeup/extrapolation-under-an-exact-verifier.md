@@ -307,11 +307,12 @@ decisive ablation. **The strategy was retrieved; the configuration was not.** Th
 
 ### 7.2 Scope and safety position
 
-This is an internal research system. It is not shipped, not available to customers, and not integrated into
-any production model. It is a **bounded, memory-level recursive loop**: it improves its future performance by
-writing to an external store that shapes its next inputs. It does not modify its own weights, its own code,
-the consolidation step, the retrieval function, or the harness. The store evolves; the machinery that evolves
-the store does not.
+This is an internal [Dropstone](https://dropstone.io) research system. It is not shipped, not available to
+customers, and not integrated into any production model. If it does reach production it will do so inside
+Dropstone, and the gate it has to pass first is stated below. It is a **bounded, memory-level recursive
+loop**: it improves its future performance by writing to an external store that shapes its next inputs. It
+does not modify its own weights, its own code, the consolidation step, the retrieval function, or the
+harness. The store evolves; the machinery that evolves the store does not.
 
 The loop is objective-agnostic — its behaviour is determined by the verifier attached to it. Before any
 production path our gate includes misuse evaluation against offensive-security-shaped objectives on targets we
@@ -585,6 +586,6 @@ it is why the experiment was built this way, not as evidence that it worked. The
 
 ---
 
-*We are Blankline, the team behind Dropstone. The model is Dropstone Heavy 1.7 (Kimi 3), served from our
+*We are Blankline, the team behind [Dropstone](https://dropstone.io). The model is Dropstone Heavy 1.7 (Kimi 3), served from our
 own commercial endpoint, used frozen at list price with no fine-tuning. We did not train the model; we built
 the memory loop around it.*

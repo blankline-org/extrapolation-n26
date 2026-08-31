@@ -97,9 +97,12 @@ post-processing stage. **The margin over FICO Xpress does not** — it needs bot
 
 ## What is not here
 
-**The memory loop itself.** `src/evolve.mjs` is an internal research system and is not released. What is
-published is its complete output record — all 91 attempts with the model's own analysis, verified score,
-failure reason and timestamp — plus everything downstream, since both post-processing stages contain no model.
+**The memory loop itself.** `src/evolve.mjs` is an internal [Dropstone](https://dropstone.io) research system
+and is not released. It is not shipped, not available to customers, and not part of any production model; if
+it reaches production it will do so inside Dropstone, after the misuse, memory-integrity and tenant-isolation
+evaluations described in §7.2 of the write-up. What is published here is its complete output record — all 91
+attempts with the model's own analysis, verified score, failure reason and timestamp — plus everything
+downstream, since both post-processing stages contain no model.
 
 **You can audit what the loop did and check every claim downstream of it. You cannot re-run the loop.** The
 check that requires no trust in us is the restart ablation below.
@@ -136,4 +139,6 @@ If you run either, we would like to see the result.
 MIT — see [`LICENSE`](LICENSE). Coordinates and archived run data are facts about a public mathematical
 problem, released under the same terms.
 
-Built by Blankline, the team behind Dropstone.
+Built by Blankline, the team behind [Dropstone](https://dropstone.io). The model is Dropstone Heavy 1.7
+(Kimi 3), served from our own commercial endpoint, used frozen at list price with no fine-tuning. We did not
+train the model; we built the memory loop around it.
