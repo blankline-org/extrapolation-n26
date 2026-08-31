@@ -4,8 +4,16 @@ Artifacts for the writeup in [`writeup/extrapolation-under-an-exact-verifier.md`
 
 A frozen language model coupled to an external memory loop produced a 26-circle packing that is provably
 non-isomorphic to the published record family. This repository contains the configuration, the exact
-verifier, the full reasoning trace, and the 91-attempt archive that preceded it — enough to check every
-numerical claim in the writeup without trusting any of it.
+verifier, the full reasoning trace, and the 91-attempt archive that preceded it.
+
+**What is not here: the memory loop itself.** `src/evolve.mjs` is an internal research system and is not
+released (§7.2 of the writeup). What is published is its complete output record — all 91 attempts with the
+model's own analysis, verified score, failure reason and timestamp — plus everything downstream of it, since
+the two post-processing phases contain no model and are included in full.
+
+So: **you can audit what the loop did and independently check every numerical claim downstream of it. You
+cannot re-run the loop.** The experiment that does not require trusting us is the matched-budget restart
+ablation below — it needs no model and no access to our system.
 
 **This is not a record.** Six published results exceed ours, one of them a simulated-annealing heuristic with
 no model in the loop. See §2 and §10 of the writeup. The contribution is the documented trace and the

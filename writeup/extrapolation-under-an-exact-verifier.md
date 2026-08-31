@@ -302,9 +302,15 @@ negative results, before shipping.
 The repository is public and a reader will reconstruct this quickly, so we state it directly. **Three
 components produced the published number, and only the first contains a model.**
 
-**Phase 1 — the memory loop (`src/evolve.mjs`).** The loop wrote the search programs across 91 attempts. Its
-best archived score is **2.635907462261**. This exceeds AlphaEvolve by 4.47e-5 and Friedman 2012 by 1.91e-3.
-It does not exceed FICO Xpress, falling short by 8.05e-6.
+**Phase 1 — the memory loop (`src/evolve.mjs`, not published — see §7.2).** The loop wrote the search programs
+across 91 attempts. Its best archived score is **2.635907462261**. This exceeds AlphaEvolve by 4.47e-5 and
+Friedman 2012 by 1.91e-3. It does not exceed FICO Xpress, falling short by 8.05e-6.
+
+The loop itself is an internal research system and its source is not in the public repository. Its *outputs*
+are: all 91 attempts, with the model's own analysis, the verified score, the failure reason and a timestamp
+for each, are published in `results/archive-circle-packing-26.heavy.json`, and the full reasoning trace of
+the decisive attempt is published in full. **A reader can therefore audit what the loop did, but cannot re-run
+it.** We state the consequence of that in §12.
 
 **Phase 2 — LP radii and structural relocation (`scripts/relocate.mjs`).** With circle centres held fixed,
 maximizing the sum of radii is a linear program. This step solves that LP and applies structural relocation,
@@ -466,7 +472,21 @@ in the category reports internal metrics, which is the standard criticism of it.
 
 ---
 
-## 12. Reproducibility
+## 12. What can and cannot be reproduced
+
+We separate these because the repository supports one and not the other.
+
+**Independently verifiable from the published artifacts:** the configuration and its constraint violation; the
+non-isomorphism of the contact graphs; the radii comparison against the record family; every statistic in §5,
+including the self-report cross-check; and the full provenance chain in §8, since phases 2 and 3 are published
+and contain no model.
+
+**Not reproducible from the published artifacts:** the memory loop itself. `src/evolve.mjs` is an internal
+system and is not released (§7.2), so the discovery cannot be re-run end to end by a third party. What is
+published is its complete output record rather than its source. **A reader can audit what the loop did and
+check everything downstream of it; a reader cannot independently rediscover the result by running our loop.**
+This is a real limit on the claim in §1, and the matched-budget restart ablation in §9.3 — which requires no
+model and no access to our system — is the check that does not depend on trusting us.
 
 | artifact | contents |
 |---|---|
