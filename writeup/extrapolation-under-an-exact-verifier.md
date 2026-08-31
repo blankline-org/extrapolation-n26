@@ -24,6 +24,11 @@ This is an existence result, not a causal one. We do not claim that memory produ
 We claim that here is one machine-graded instance of it, documented from the inside, and that the grader is
 arithmetic rather than human judgment.
 
+> **Code and data:** [`github.com/blankline-org/extrapolation-n26`](https://github.com/blankline-org/extrapolation-n26)
+> — the coordinates, the exact verifier, the full reasoning trace, and all 91 attempts. Three scripts
+> reproduce the numerical claims below. Node 18+, no dependencies, no install. Every file path in this paper
+> is relative to that repository.
+
 ---
 
 ## 1. What we claim, operationally
@@ -507,7 +512,8 @@ in the category reports internal metrics, which is the standard criticism of it.
 
 ## 12. What can and cannot be reproduced
 
-We separate these because the repository supports one and not the other.
+We separate these because [the repository](https://github.com/blankline-org/extrapolation-n26) supports one
+and not the other.
 
 **Independently verifiable from the published artifacts:** the configuration and its constraint violation; the
 non-isomorphism of the contact graphs; the radii comparison against the record family; every statistic in §5,
