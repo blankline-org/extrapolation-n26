@@ -140,8 +140,21 @@ The stronger form of this argument is structural. Computing contact graphs at 1e
 | | contact edges | wall contacts | degree sequence |
 |---|---|---|---|
 | **this work (gen3b)** | **48** | **14** | `22222333334444444444555556` |
+| AlphaEvolve (construction 1) | 29 | 15 | `11112222222222222233333344` |
 | Packomania (Haowei Lin) | 58 | 20 | `22333444444444455556666667` |
 | Hyra full-precision coordinates | 58 | 20 | `22333444444444455556666667` |
+
+AlphaEvolve's coordinates are published in `google-deepmind/alphaevolve_results` (notebook section B.12,
+`construction_1`). We re-verified them: sum 2.635862756414, strictly feasible with 7.17e-9 of slack. Its
+degree sequence differs from ours at every contact tolerance we tested (1e-7, 1e-6, 1e-5), so the packings are
+non-isomorphic.
+
+**One qualification on that specific comparison.** AlphaEvolve's published construction is not snapped to
+exact contact — its edge count moves from 29 to 38 to 46 as the contact tolerance goes from 1e-7 to 1e-6 to
+1e-5, so its contact graph is not sharply determined at the published precision of eight decimal places. Ours
+is stable at 48 across 1e-7 and 1e-6, as is the record family's at 58. The conclusion holds at every tolerance
+we can test, but it rests on a less well-determined graph than the record-family comparison does, and we
+would rather say so than present the two as equally firm.
 
 Index-matched, our packing shares 10 of 96 contact edges with the record family (Jaccard 0.104). Index
 matching is attackable, so we rely on the label-invariant form: **degree sequences are invariant under
@@ -473,9 +486,12 @@ in the category reports internal metrics, which is the standard criticism of it.
   model-free post-processing stages, one of them a human-authored LP the model never implemented despite
   repeatedly identifying the opportunity (§8). The memory loop's own best is 2.635907462261.
 - **Our bar is not the strictest in the field.** AlphaEvolve validates at atol = 0 (§2).
-- **Novelty is measured against the record family we hold** (Packomania and the full-precision Hyra
-  coordinates). AlphaEvolve's coordinates are public in `google-deepmind/alphaevolve_results`; we have not yet
-  run the comparison against them and therefore do not claim novelty relative to AlphaEvolve specifically.
+- **Novelty is measured against every published solution we could obtain** — AlphaEvolve, Packomania and the
+  full-precision Hyra coordinates (§4.1). We could not obtain coordinates for the FICO Xpress result, for
+  ThetaEvolve, or for the July 2025 independent result, so those comparisons remain unrun.
+- **The AlphaEvolve comparison rests on a tolerance-sensitive graph.** Their construction is not snapped to
+  exact contact, so its edge count varies with the contact tolerance (§4.1). The conclusion is stable across
+  the tolerances we tested; the underlying graph is less well determined than the record family's.
 - **The retrieval cue was supplied by the harness** (§3). The trace records a probed retrieval failure, not a
   spontaneous one.
 - **Self-reported retrieval failure is corroborating, not conclusive.** §5.1 shows the model reports its own

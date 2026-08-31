@@ -14,6 +14,7 @@ const tol = Number(process.argv[2] ?? 1e-7);
 const FILES = [
   ["this work (gen3b)", "pack26-discovery/gen3b-best.json"],
   ["memory loop best", "results/best-circle-packing-26.heavy.json"],
+  ["AlphaEvolve", "pack26-discovery/alphaevolve-n26.json"],
   ["Packomania (Haowei Lin)", "pack26-discovery/packomania26.json"],
   ["Hyra full-precision", "pack26-discovery/hyra-n26.json"],
 ];
@@ -78,8 +79,8 @@ for (const [label, file] of FILES) {
 }
 
 const ours = results["this work (gen3b)"];
-console.log("\nagainst the record family:");
-for (const other of ["Packomania (Haowei Lin)", "Hyra full-precision"]) {
+console.log("\nagainst the published solutions:");
+for (const other of ["AlphaEvolve", "Packomania (Haowei Lin)", "Hyra full-precision"]) {
   const them = results[other];
   const shared = [...ours.edgeSet].filter((k) => them.edgeSet.has(k)).length;
   const union = new Set([...ours.edgeSet, ...them.edgeSet]).size;

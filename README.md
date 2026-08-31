@@ -1,108 +1,139 @@
 # Extrapolation Under an Exact Verifier — n = 26 circle packing
 
-Artifacts for the writeup in [`writeup/extrapolation-under-an-exact-verifier.md`](writeup/extrapolation-under-an-exact-verifier.md).
+A frozen language model with an external memory loop produced a 26-circle packing that is **provably
+non-isomorphic** to every published solution we could obtain — including AlphaEvolve's. This repository has
+the coordinates, the exact verifier, the full reasoning trace, and all 91 attempts.
 
-A frozen language model coupled to an external memory loop produced a 26-circle packing that is provably
-non-isomorphic to the published record family. This repository contains the configuration, the exact
-verifier, the full reasoning trace, and the 91-attempt archive that preceded it.
+**Write-up:** https://blankline.org/research/extrapolation-under-an-exact-verifier
 
-**What is not here: the memory loop itself.** `src/evolve.mjs` is an internal research system and is not
-released (§7.2 of the writeup). What is published is its complete output record — all 91 attempts with the
-model's own analysis, verified score, failure reason and timestamp — plus everything downstream of it, since
-the two post-processing phases contain no model and are included in full.
+![Two 26-circle packings side by side with their contact graphs overlaid. Ours has 48 contacts and 14 wall
+contacts; the record family has 58 and 20. Coloured edges are unique to that packing; shared edges are
+dimmed.](writeup/figures/fig-1-structure.png)
 
-So: **you can audit what the loop did and independently check every numerical claim downstream of it. You
-cannot re-run the loop.** The experiment that does not require trusting us is the matched-budget restart
-ablation below — it needs no model and no access to our system.
+Same problem, near-identical sum, different object. Ours makes **48 contacts**; the record family makes
+**58**.
 
-**This is not a record.** Six published results exceed ours, one of them a simulated-annealing heuristic with
-no model in the loop. See §2 and §10 of the writeup. The contribution is the documented trace and the
-structural proof, not the value.
+## Check it in ten seconds
 
-## Check it yourself
-
-Requires Node 18+. No dependencies, no install step.
+Node 18+. No dependencies, no install.
 
 ```sh
-node verify.mjs           # the published packing, under exact arithmetic
-node contact-graph.mjs    # the non-isomorphism claim (§4.1)
-node archive-stats.mjs    # what the 91 attempts show (§5)
+git clone https://github.com/blankline-org/extrapolation-n26
+cd extrapolation-n26
+node verify.mjs
 ```
 
-`verify.mjs` accepts any solution file, so you can check the comparison packings on the same code path:
+```
+sum of radii    2.635917599028
+max violation   2.776e-17   (overlap 1-13)
+valid @ 1e-9    yes
+```
+
+`2.78e-17` is machine epsilon — the packing is feasible to the limit of double precision. The verifier is
+forty lines and the candidate program never saw it.
 
 ```sh
-node verify.mjs pack26-discovery/packomania26.json
-node verify.mjs pack26-discovery/hyra-n26.json
-node verify.mjs results/best-circle-packing-26.heavy.json
+node contact-graph.mjs   # the non-isomorphism proof
+node archive-stats.mjs   # what the 91 attempts show
+node verify.mjs pack26-discovery/alphaevolve-n26.json   # or any other solution file
 ```
 
-## The result
+## The proof
 
-| | value |
-|---|---|
-| sum of radii | **2.635917599028** |
-| max constraint violation | **2.78e-17** |
-| contact edges / wall contacts | 48 / 14 |
-| degree sequence | `22222333334444444444555556` |
-| record family degree sequence | `22333444444444455556666667` |
+![Paired bars of how many circles have 2, 3, 4, 5, 6 and 7 contacts in each packing, with the sorted degree
+sequences printed underneath.](writeup/figures/fig-2-degrees.png)
 
-Degree sequences are invariant under relabeling. Ours differs from the record family's, so the graphs are
-non-isomorphic — this is a proof, not an estimate, and `contact-graph.mjs` reproduces it.
+Both packings share a mode of ten degree-4 circles. The entire difference is in the tails — ours carries the
+weight low, the record family carries it high.
+
+A degree sequence does not depend on how the circles are numbered. **Two graphs with different degree
+sequences cannot be relabelings of each other.** That makes this a proof rather than an observation, and
+`contact-graph.mjs` recomputes it from the coordinates rather than trusting the numbers printed here.
+
+| | contacts | wall | degree sequence |
+|---|---|---|---|
+| **this work** | **48** | **14** | `22222333334444444444555556` |
+| AlphaEvolve | 29 | 15 | `11112222222222222233333344` |
+| Packomania (Haowei Lin) | 58 | 20 | `22333444444444455556666667` |
+| Hyra full-precision | 58 | 20 | `22333444444444455556666667` |
+
+AlphaEvolve's construction is not snapped to exact contact, so its edge count moves with the tolerance (29 →
+38 → 46 at 1e-7 → 1e-6 → 1e-5). The conclusion holds at every tolerance we tested, but that graph is less
+well determined than the record family's, which is stable at 58.
+
+## What this is not
+
+**Not a record.** Six published results exceed 2.635917599028, including a simulated-annealing heuristic with
+no model in it (2.6359372) and an independent individual working alone in July 2025 (2.63592717). The record
+is 2.635983084919.
+
+**Not the strictest verification in the field.** AlphaEvolve validates at `atol = 0`; we report a measured
+violation of 2.78e-17, which is above zero.
+
+**Not a new category of result.** Verified LLM discovery is three years old and has a *Nature* paper
+(FunSearch, 2023). Test-time learning over a frozen model with external memory is an established category
+with its own benchmarks.
+
+The contribution is narrow: a timestamped, self-reported *failed* retrieval, bound to an exact verifier,
+ending in a provably non-isomorphic configuration — published with the attempt archive that produced it.
+
+## Provenance
+
+**Three components produced the published number, and only the first contains a model.**
+
+| stage | value | gain | model? |
+|---|---|---|---|
+| memory loop, best of 91 attempts | 2.635907462261 | — | yes |
+| + LP radii and relocation (`scripts/relocate.mjs`) | 2.635912195016 | +4.73e-6 | no |
+| + seed and parent sweep (`pack26-discovery/gen-next.mjs`) | 2.635917599028 | +5.40e-6 | no |
+
+Stage 2 is a **human** contribution, not the loop's. With centres fixed, maximizing the sum of radii is a
+linear program; the model identified this repeatedly and never implemented it, so every program it wrote used
+a greedy grow-to-fit pass that converges away from the LP optimum. See the header of
+[`scripts/lp-radii.mjs`](scripts/lp-radii.mjs).
+
+The margins over AlphaEvolve and Friedman 2012 belong to the memory loop and survive without either
+post-processing stage. **The margin over FICO Xpress does not** — it needs both.
+
+## What is not here
+
+**The memory loop itself.** `src/evolve.mjs` is an internal research system and is not released. What is
+published is its complete output record — all 91 attempts with the model's own analysis, verified score,
+failure reason and timestamp — plus everything downstream, since both post-processing stages contain no model.
+
+**You can audit what the loop did and check every claim downstream of it. You cannot re-run the loop.** The
+check that requires no trust in us is the restart ablation below.
 
 ## Layout
 
 | path | contents |
 |---|---|
 | `pack26-discovery/gen3b-best.json` | the configuration — 26 `(x, y, r)` triples |
+| `pack26-discovery/alphaevolve-n26.json` | AlphaEvolve's construction 1, extracted and re-verified |
+| `pack26-discovery/packomania26.json`, `hyra-n26.json` | the record family, for comparison |
+| `pack26-discovery/incumbent.json` | the LP-verified local optimum the search escaped |
 | `pack26-discovery/` | the full lineage, seed to gen3b, with parents and scores |
-| `pack26-discovery/packomania26.json` | the published record coordinates, for comparison |
-| `pack26-discovery/hyra-n26.json` | full-precision record coordinates, shifted to the unit square |
-| `pack26-discovery/incumbent.json` | the LP-verified local optimum the search escaped (§4.2) |
-| `src/problems.mjs` | the verifier, as used by the loop |
-| `scripts/relocate.mjs`, `scripts/lp-radii.mjs` | the human-authored, model-free phase 2 |
-| `results/best-circle-packing-26.heavy.json` | after LP radii and relocation, before the seed sweep |
-| `results/reasoning-live.heavy.log` | 214,223 bytes of verbatim reasoning, including L3018–3024 |
-| `results/archive-circle-packing-26.heavy.json` | 91 attempts with analysis, scores, failure reasons, timestamps |
-| `results/report-convention.md` | memory-on/off control, positive |
-| `results/report-independent.md` | memory-on/off control, **null result** |
-
-## Provenance
-
-**Three components produced the published number, and only the first contains a model.**
-
-| stage | value | gain | contains a model |
-|---|---|---|---|
-| memory loop, best of 91 attempts | 2.635907462261 | — | yes |
-| + LP radii and relocation (`scripts/relocate.mjs`) | 2.635912195016 | +4.73e-6 | no |
-| + seed and parent sweep (`pack26-discovery/gen-next.mjs`) | 2.635917599028 | +5.40e-6 | no |
-
-Phase 2 is a **human algorithmic contribution**, not the loop's. With centres held fixed, maximizing the sum
-of radii is a linear program; the model identified this repeatedly and never implemented it, so every program
-the loop produced used a greedy grow-to-fit pass that converges away from the LP optimum. The reasoning is in
-the header of [`scripts/lp-radii.mjs`](scripts/lp-radii.mjs).
-
-The margins over AlphaEvolve and Friedman 2012 belong to the memory loop and survive without either
-post-processing stage. **The margin over FICO Xpress does not** — it requires both. §8 of the writeup states
-this in full.
+| `src/problems.mjs` | the verifier |
+| `scripts/` | the human-authored, model-free stage 2 |
+| `results/reasoning-live.heavy.log` | 214,223 bytes of verbatim reasoning, including L3018 |
+| `results/archive-circle-packing-26.heavy.json` | 91 attempts, with analysis, scores and timestamps |
+| `results/report-convention.md`, `report-independent.md` | memory on/off controls, including the null result |
 
 ## Not yet run
 
-Listed here rather than only in the paper, because they are the experiments that would strengthen or break
-the central claim:
+Listed here rather than only in the paper, because these would strengthen or break the central claim:
 
 - **Matched-budget memory-free restarts.** `pack26-discovery/structural-search.mjs --seed=N --seconds=S`
-  contains no model in the loop. If restarts recover degree sequence `22222333334444444444555556` at any
-  meaningful rate, §4.2 fails.
-- **Comparison against AlphaEvolve's published coordinates**, available in
-  [`google-deepmind/alphaevolve_results`](https://github.com/google-deepmind/alphaevolve_results). Until this
-  is run we do not claim novelty relative to AlphaEvolve specifically.
+  contains no model. If restarts recover degree sequence `22222333334444444444555556` at any meaningful rate,
+  the basin-escape argument fails.
+- **Comparison against FICO Xpress, ThetaEvolve, and the July 2025 independent result.** We could not obtain
+  published coordinates for any of the three.
 
 If you run either, we would like to see the result.
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE). Solution coordinates and archived run data are facts about a public
-mathematical problem and are released alongside the code under the same terms.
+MIT — see [`LICENSE`](LICENSE). Coordinates and archived run data are facts about a public mathematical
+problem, released under the same terms.
 
 Built by Blankline, the team behind Dropstone.
