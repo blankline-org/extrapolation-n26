@@ -152,6 +152,21 @@ Our configuration reaches essentially the same sum with ten fewer contacts and s
 record family is densely coordinated, with six degree-6 circles; ours has one. It is a sparser solution to the
 same problem.
 
+![Both packings drawn as circle outlines with their contact graphs overlaid. Edges shared by both are dimmed;
+edges unique to each packing are drawn in that packing's colour.](figures/fig-1-structure.png)
+
+*Figure 1 — the two packings with contact graphs overlaid. Shared edges are dimmed, so the coloured lines are
+the difference. Shared edges are matched by circle index, which is the weaker comparison; figure 2 is the one
+that settles it.*
+
+![Paired bars showing how many circles have 2, 3, 4, 5, 6 and 7 contacts in each packing, with the sorted
+degree sequences printed underneath.](figures/fig-2-degrees.png)
+
+*Figure 2 — the degree distributions. Ours peaks at ten degree-4 circles with a single degree-6 and nothing
+above it; the record family is right-shifted, with six degree-6 circles and one degree-7. Because a degree
+sequence does not depend on how the circles are numbered, two graphs with different degree sequences cannot be
+relabelings of each other. This is the step figure 1 can only illustrate.*
+
 **Structural difference alone is not the claim.** Circle packing at this scale is multimodal; independent
 restarts land in different basins, and finding *a* different contact graph is inexpensive. We report this to
 establish the mechanism — basin escape rather than local polish — and because non-isomorphism is the one
